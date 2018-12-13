@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/action_today"
+            android:orderInCategory="2"
+            android:icon="@drawable/ic_calendar_today_24px"
+            android:title="@string/today"
+            app:showAsAction="always"/>
+</menu>

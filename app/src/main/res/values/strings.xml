@@ -1,0 +1,30 @@
+<resources>
+    <string name="monday">MON</string>
+    <string name="tuesday">TUE</string>
+    <string name="wednesday">WED</string>
+    <string name="thursday">THU</string>
+    <string name="friday">FRI</string>
+    <string name="saturday">SAT</string>
+    <string name="sunday">SUN</string>
+
+    <string name="exit_double_click">Please click BACK again to exit</string>
+
+    <string name="app_name">KCalCulator</string>
+    <string name="title_home">Home</string>
+    <string name="title_data">Data</string>
+    <string name="title_chart">Charts</string>
+    <string name="date">Date</string>
+    <string name="spent">Spent</string>
+    <string name="eaten">Eaten</string>
+    <string name="weight">Weight</string>
+    <string name="kcal_difference">Difference</string>
+    <string name="kcal_difference_percent">Difference %</string>
+    <string name="kday">KDay</string>
+    <string name="today">Today</string>
+    <string name="week">WEEK: </string>
+    <string name="empty"/>
+    <string name="kcal">KCAL</string>
+    <string name="todo">TODO</string>
+    <string name="kg">KG</string>
+    <string name="settings">Settings</string>
+</resources>
