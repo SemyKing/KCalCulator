@@ -8,18 +8,14 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 import semyking.kcalculator.views.BottomNavigationViewHelper;
 import semyking.kcalculator.views.data.DataFragment;
 import semyking.kcalculator.views.home.HomeFragment;
 
 public class MainActivity extends AppCompatActivity {
-
-    public TextView mWeekOfYear;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,14 +31,16 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Toolbar myToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(myToolbar);
-//        if (getSupportActionBar() != null)
-//            getSupportActionBar().setTitle(R.string.week);
+//        Toolbar myToolbar = findViewById(R.id.toolbar);
+//        setSupportActionBar(myToolbar);
+////        if (getSupportActionBar() != null)
+////            getSupportActionBar().setTitle(R.string.week);
+//
+//        mWeekOfYear = myToolbar.findViewById(R.id.weekNumber_textView);
 
-        mWeekOfYear = myToolbar.findViewById(R.id.weekNumber_textView);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        System.out.println("---------------bottomNavigationView: "+bottomNavigationView);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
@@ -109,13 +107,12 @@ public class MainActivity extends AppCompatActivity {
 
                     fragment = new HomeFragment();
                     fragmentTag = HomeFragment.TAG;
-//                    ((HomeFragment) fragment).setVars(getApplicationContext(), mWeekOfYear);
 
                     if (getSupportActionBar() != null)
                         getSupportActionBar().show();
 
                     switchFragment(fragment, fragmentTag);
-//                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                     return true;
                 case R.id.navigation_chart:
                     viewId = R.id.navigation_chart;

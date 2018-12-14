@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.shrikanthravi.collapsiblecalendarview.R.id;
@@ -84,6 +85,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
                 CustomCollapsibleCalendar.this.collapseTo(CustomCollapsibleCalendar.this.mCurrentWeekIndex);
             }
         });
+
     }
 
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
@@ -179,9 +181,14 @@ public class CustomCollapsibleCalendar extends UICalendar {
         int i;
         if (this.mAdapter != null) {
             this.mAdapter.refresh();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("MMM yyyy");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MM yyyy");
             dateFormat.setTimeZone(this.mAdapter.getCalendar().getTimeZone());
-            this.mTxtTitle.setText(dateFormat.format(this.mAdapter.getCalendar().getTime()));
+
+            String[] dateSplit = dateFormat.format(this.mAdapter.getCalendar().getTime()).split(" ");
+            String dateString = getResources().getStringArray(R.array.month_names)[Integer.parseInt(dateSplit[0]) - 1] + " " +dateSplit[1];
+
+//            this.mTxtTitle.setText(dateFormat.format(this.mAdapter.getCalendar().getTime()));
+            this.mTxtTitle.setText(dateString);
             this.mTableHead.removeAllViews();
             this.mTableBody.removeAllViews();
             int[] dayOfWeekIds = new int[]{R.string.sunday, R.string.monday, R.string.tuesday, R.string.wednesday, R.string.thursday, R.string.friday, R.string.saturday};
@@ -222,6 +229,8 @@ public class CustomCollapsibleCalendar extends UICalendar {
             this.redraw();
             this.mIsWaitingForUpdate = true;
         }
+
+
     }
 
     private int getSuitableRowIndex() {

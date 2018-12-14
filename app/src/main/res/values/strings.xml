@@ -7,24 +7,55 @@
     <string name="saturday">SAT</string>
     <string name="sunday">SUN</string>
 
+    <string-array name="month_names">
+        <item>January</item>
+        <item>February</item>
+        <item>March</item>
+        <item>April</item>
+        <item>May</item>
+        <item>June</item>
+        <item>July</item>
+        <item>August</item>
+        <item>September</item>
+        <item>October</item>
+        <item>November</item>
+        <item>December</item>
+    </string-array>
+
+    <!--<string-array name="month_names_fi">-->
+        <!--<item>Tammikuu</item>-->
+        <!--<item>Helmikuu</item>-->
+        <!--<item>Maaliskuu</item>-->
+        <!--<item>Huhtikuu</item>-->
+        <!--<item>Toukokuu</item>-->
+        <!--<item>Kesäkuu</item>-->
+        <!--<item>Heinäkuu</item>-->
+        <!--<item>Elokuu</item>-->
+        <!--<item>Syyskuu</item>-->
+        <!--<item>Lokakuu</item>-->
+        <!--<item>Marraskuu</item>-->
+        <!--<item>Joulukuu</item>-->
+    <!--</string-array>-->
+
     <string name="exit_double_click">Please click BACK again to exit</string>
 
     <string name="app_name">KCalCulator</string>
     <string name="title_home">Home</string>
     <string name="title_data">Data</string>
     <string name="title_chart">Charts</string>
+    <string name="title_settings">Settings</string>
     <string name="date">Date</string>
     <string name="spent">Spent</string>
     <string name="eaten">Eaten</string>
     <string name="weight">Weight</string>
     <string name="kcal_difference">Difference</string>
     <string name="kcal_difference_percent">Difference %</string>
-    <string name="kday">KDay</string>
+    <string name="kday">K.Day</string>
     <string name="today">Today</string>
     <string name="week">WEEK: </string>
     <string name="empty"/>
     <string name="kcal">KCAL</string>
     <string name="todo">TODO</string>
     <string name="kg">KG</string>
-    <string name="settings">Settings</string>
+
 </resources>

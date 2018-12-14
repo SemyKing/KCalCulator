@@ -3,54 +3,22 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/container"
+        android:id="@+id/root_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MainActivity">
 
-    <android.support.v7.widget.Toolbar
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            android:theme="?attr/actionBarTheme"
-            android:minHeight="?attr/actionBarSize" android:id="@+id/toolbar" app:layout_constraintTop_toTopOf="parent">
-
-
-        <TextView
-                android:id="@+id/weekNumber_textView"
-                android:layout_gravity="end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                tools:ignore="MissingPrefix"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                tools:layout_editor_absoluteY="19dp" tools:layout_editor_absoluteX="16dp"
-                android:paddingEnd="24dp" android:paddingStart="0dp"/>
-
-        <TextView
-                android:layout_gravity="end"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                tools:ignore="MissingPrefix"
-                android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-                tools:layout_editor_absoluteY="19dp" tools:layout_editor_absoluteX="16dp"
-                android:paddingEnd="4dp" android:paddingStart="4dp"
-                android:text="@string/week"/>
-
-
-    </android.support.v7.widget.Toolbar>
     <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp" android:id="@+id/fragment_container"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/navigation"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            app:layout_constraintBottom_toTopOf="@+id/bottom_navigation_view"
+            app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 
     <android.support.design.widget.BottomNavigationView
-            android:id="@+id/navigation"
+            android:id="@+id/bottom_navigation_view"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="0dp"
