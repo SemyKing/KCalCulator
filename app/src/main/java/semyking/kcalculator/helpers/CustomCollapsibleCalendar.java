@@ -1,4 +1,4 @@
-package semyking.kcalculator.views;
+package semyking.kcalculator.helpers;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
-import android.widget.LinearLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 import com.shrikanthravi.collapsiblecalendarview.R.id;

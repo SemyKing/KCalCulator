@@ -57,5 +57,6 @@
     <string name="kcal">KCAL</string>
     <string name="todo">TODO</string>
     <string name="kg">KG</string>
+    <string name="save">Save</string>
 
 </resources>

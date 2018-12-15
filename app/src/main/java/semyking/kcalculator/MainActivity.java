@@ -1,53 +1,120 @@
 package semyking.kcalculator;
 
-import android.content.pm.ActivityInfo;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
-import semyking.kcalculator.views.BottomNavigationViewHelper;
+import semyking.kcalculator.helpers.BottomNavigationViewHelper;
+import semyking.kcalculator.views.CustomViewPager;
+import semyking.kcalculator.views.ViewPagerAdapter;
+import semyking.kcalculator.views.charts.ChartsFragment;
 import semyking.kcalculator.views.data.DataFragment;
 import semyking.kcalculator.views.home.HomeFragment;
+import semyking.kcalculator.views.settings.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    private MenuItem prevMenuItem;
+//    private ViewPager viewPager;
+    private CustomViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (savedInstanceState != null) {
-            //Restore the fragment's instance
-
-//            fragment = getSupportFragmentManager().getFragment(savedInstanceState, "fragment");
-//            fragmentTag = savedInstanceState.getString("fragmentTag");
-            viewId = savedInstanceState.getInt("viewId");
-        }
-
         setContentView(R.layout.activity_main);
 
-//        Toolbar myToolbar = findViewById(R.id.toolbar);
-//        setSupportActionBar(myToolbar);
-////        if (getSupportActionBar() != null)
-////            getSupportActionBar().setTitle(R.string.week);
-//
-//        mWeekOfYear = myToolbar.findViewById(R.id.weekNumber_textView);
+        viewPager = findViewById(R.id.viewPager);
+//        viewPager.setOffscreenPageLimit(3);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
-        System.out.println("---------------bottomNavigationView: "+bottomNavigationView);
-
-        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
-        if (viewId != 0)
-            bottomNavigationView.setSelectedItemId(viewId);
-        else
-            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.navigation_home:
+
+
+                        viewPager.setCurrentItem(0);
+                        break;
+                    case R.id.navigation_chart:
+
+
+                        viewPager.setCurrentItem(1);
+                        break;
+                    case R.id.navigation_data:
+
+
+                        viewPager.setCurrentItem(2);
+                        break;
+                    case R.id.navigation_settings:
+
+
+                        viewPager.setCurrentItem(3);
+                        break;
+                }
+                return false;
+            }
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+            @Override
+            public void onPageSelected(int position) {
+                if (prevMenuItem != null) {
+                    prevMenuItem.setChecked(false);
+                } else {
+                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
+                }
+                bottomNavigationView.getMenu().getItem(position).setChecked(true);
+                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
+
+                // Close keyboard on view change
+                InputMethodManager imm = (InputMethodManager)viewPager.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
+                }
+            }
+            @Override
+            public void onPageScrollStateChanged(int state) {
+            }
+        });
+
+
+        setupViewPager(viewPager);
+
+    }
+
+
+    private void setupViewPager(ViewPager viewPager) {
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
+
+        HomeFragment        homeFragment        = new HomeFragment();
+        ChartsFragment      chartsFragment      = new ChartsFragment();
+        DataFragment        dataFragment        = new DataFragment();
+        SettingsFragment    settingsFragment    = new SettingsFragment();
+
+        viewPagerAdapter.addFragment(homeFragment);
+        viewPagerAdapter.addFragment(chartsFragment);
+        viewPagerAdapter.addFragment(dataFragment);
+        viewPagerAdapter.addFragment(settingsFragment);
+
+        viewPager.setAdapter(viewPagerAdapter);
     }
 
     @Override
@@ -56,22 +123,6 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_toolbar_items, menu);
         return true;
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-//            case android.R.id.home:
-//                onBackPressed();
-//                break;
-            case R.id.action_today:
-                if (fragment instanceof HomeFragment) {
-                    ((HomeFragment) fragment).selectToday();
-                }
-                break;
-        }
-        return true;
-    }
-
 
     private boolean doubleBackToExitPressedOnce = false;
 
@@ -94,71 +145,9 @@ public class MainActivity extends AppCompatActivity {
         }, 3000);
     }
 
-    private Fragment fragment = null;
-    private String fragmentTag;
-    private int viewId;
-
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    viewId = R.id.navigation_home;
-
-                    fragment = new HomeFragment();
-                    fragmentTag = HomeFragment.TAG;
-
-                    if (getSupportActionBar() != null)
-                        getSupportActionBar().show();
-
-                    switchFragment(fragment, fragmentTag);
-                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    return true;
-                case R.id.navigation_chart:
-                    viewId = R.id.navigation_chart;
-
-
-
-                    return true;
-                case R.id.navigation_data:
-                    viewId = R.id.navigation_data;
-
-                    fragment = new DataFragment();
-                    fragmentTag = DataFragment.TAG;
-                    if (getSupportActionBar() != null)
-                        getSupportActionBar().hide();
-
-                    switchFragment(fragment, fragmentTag);
-//                    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE); // RESETS ACTIVITY AND LAUNCHES HomeFragment
-                    return true;
-
-                case R.id.navigation_settings:
-
-
-                    return true;
-            }
-            return false;
-        }
-    };
-
-    private void switchFragment(Fragment newFragment, String tag) {
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.fragment_container, newFragment, tag);
-        fragmentTransaction.commit();
-    }
-
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        //Save the fragment's instance
-
-//        getSupportFragmentManager().putFragment(outState, "fragment", fragment);
-//        outState.putString("fragmentTag", fragmentTag);
-        outState.putInt("viewId", viewId);
-
     }
-
 
 }

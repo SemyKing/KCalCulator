@@ -1,4 +1,4 @@
-package semyking.kcalculator.views;
+package semyking.kcalculator.helpers;
 
 import android.content.Context;
 import android.view.GestureDetector;

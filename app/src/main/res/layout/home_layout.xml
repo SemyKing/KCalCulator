@@ -6,12 +6,12 @@
                                              android:layout_height="match_parent" android:id="@+id/home_root_layout">
 
 
-    <semyking.kcalculator.views.CustomCollapsibleCalendar
+    <semyking.kcalculator.helpers.CustomCollapsibleCalendar
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/calendarView"
             app:layout_constraintTop_toTopOf="parent">
-    </semyking.kcalculator.views.CustomCollapsibleCalendar>
+    </semyking.kcalculator.helpers.CustomCollapsibleCalendar>
     <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/difference_layout"
@@ -136,7 +136,7 @@
             android:layout_height="wrap_content" android:id="@+id/weight_kday_layout"
             android:layout_width="0dp"
             app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="24dp">
+            android:layout_marginBottom="8dp" app:layout_constraintBottom_toTopOf="@+id/saveButton">
 
         <ImageView
                 android:layout_width="0dp"
@@ -202,6 +202,15 @@
 
 
     </android.support.constraint.ConstraintLayout>
+    <Button
+            android:text="@string/save"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/saveButton" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="50dp" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="50dp" android:drawableLeft="@android:drawable/ic_menu_save"
+            android:gravity="center" android:paddingEnd="48dp" android:paddingBottom="8dp" android:paddingTop="8dp"/>
 
 
 </android.support.constraint.ConstraintLayout>

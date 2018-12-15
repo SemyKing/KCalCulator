@@ -1,4 +1,4 @@
-package semyking.kcalculator.views;
+package semyking.kcalculator.helpers;
 
 import android.annotation.SuppressLint;
 import android.support.design.internal.BottomNavigationItemView;
