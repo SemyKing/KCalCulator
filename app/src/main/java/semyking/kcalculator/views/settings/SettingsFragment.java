@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -52,27 +53,29 @@ public class SettingsFragment extends Fragment {
         mDbHelper = DataBaseHelper.getInstance(getContext());
         mCalendar = CalendarHelper.getCalendar();
 
-        final Button deleteButton = view.findViewById(R.id.deleteButton);
-        deleteButton.setOnClickListener(new View.OnClickListener() {
+
+
+        final ConstraintLayout exportLayout = view.findViewById(R.id.export_layout);
+        exportLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                handleDelete();
+                handleExport();
             }
         });
 
-        final Button exportButton = view.findViewById(R.id.exportButton);
-        exportButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                exportDataToCSV();
-            }
-        });
-
-        final Button importButton = view.findViewById(R.id.importButton);
-        importButton.setOnClickListener(new View.OnClickListener() {
+        final ConstraintLayout importLayout = view.findViewById(R.id.import_layout);
+        importLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleImport();
+            }
+        });
+
+        final ConstraintLayout clearDB_Layout = view.findViewById(R.id.clearDB_layout);
+        clearDB_Layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleDelete();
             }
         });
 
@@ -180,7 +183,7 @@ public class SettingsFragment extends Fragment {
         mDbHelper.saveImportedData(importedList);
     }
 
-    private void exportDataToCSV() {
+    private void handleExport() {
         final char DEFAULT_SEPARATOR = ',';
 
         ArrayList<KcalData> exportList = new ArrayList<>(mDbHelper.getAllData());

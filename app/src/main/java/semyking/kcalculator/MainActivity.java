@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        System.out.println("-------------NEW ACTIVITY-------------");
 
         if (savedInstanceState != null) {
             viewId = savedInstanceState.getInt("viewId");
@@ -50,13 +49,11 @@ public class MainActivity extends AppCompatActivity {
         else
             bottomNavigationView.setSelectedItemId(R.id.navigation_home);
 
-
-
         File appDir = new File(this.getExternalFilesDir(null), "KcalCulator");
 
         if (!appDir.exists()) {
             if (!appDir.mkdirs()) {
-                Log.e("appDir", "Directory not created");
+                Log.e("ERROR", "MainActivity, cannot create subdirectory 'KcalCulator' for exports");
             }
         }
     }

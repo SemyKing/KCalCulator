@@ -23,18 +23,18 @@
     </string-array>
 
     <!--<string-array name="month_names_fi">-->
-        <!--<item>Tammikuu</item>-->
-        <!--<item>Helmikuu</item>-->
-        <!--<item>Maaliskuu</item>-->
-        <!--<item>Huhtikuu</item>-->
-        <!--<item>Toukokuu</item>-->
-        <!--<item>Kesäkuu</item>-->
-        <!--<item>Heinäkuu</item>-->
-        <!--<item>Elokuu</item>-->
-        <!--<item>Syyskuu</item>-->
-        <!--<item>Lokakuu</item>-->
-        <!--<item>Marraskuu</item>-->
-        <!--<item>Joulukuu</item>-->
+    <!--<item>Tammikuu</item>-->
+    <!--<item>Helmikuu</item>-->
+    <!--<item>Maaliskuu</item>-->
+    <!--<item>Huhtikuu</item>-->
+    <!--<item>Toukokuu</item>-->
+    <!--<item>Kesäkuu</item>-->
+    <!--<item>Heinäkuu</item>-->
+    <!--<item>Elokuu</item>-->
+    <!--<item>Syyskuu</item>-->
+    <!--<item>Lokakuu</item>-->
+    <!--<item>Marraskuu</item>-->
+    <!--<item>Joulukuu</item>-->
     <!--</string-array>-->
 
     <string name="exit_double_click">Please click BACK again to exit</string>
@@ -52,7 +52,7 @@
     <string name="kcal_difference_percent">Difference %</string>
     <string name="kday">K.Day</string>
     <string name="today">Today</string>
-    <string name="week">WEEK: </string>
+    <string name="week">WEEK:</string>
     <string name="empty"></string>
     <string name="kcal">KCAL</string>
     <string name="todo">TODO</string>
@@ -64,7 +64,9 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="confirm_db_clear_title">Confirm database delete</string>
-    <string name="confirm_db_clear_msg">You are about to delete all records of database. Do you really want to proceed ?</string>
+    <string name="confirm_db_clear_msg">You are about to delete all records of database. Do you really want to proceed
+        ?
+    </string>
     <string name="db_clear_successful">Database cleared</string>
     <string name="export_successful">Export successful</string>
     <string name="select_import_file">Select file to import</string>
@@ -74,5 +76,11 @@
     <string name="import_text">Import data from CSV into Database. Local data will be overwritten.</string>
     <string name="clear_db">Clear Database</string>
     <string name="clear_db_text">Delete all records from local Database</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="loading">Loading…</string>
+
+
+
+
 
 </resources>

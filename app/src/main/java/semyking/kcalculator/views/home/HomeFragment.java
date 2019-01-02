@@ -67,7 +67,7 @@ public class HomeFragment extends Fragment {
             mDbHelper = DataBaseHelper.getInstance(getActivity());
             mDataStorage = ((MainActivity) getActivity()).getDataStorage();
         } else
-            Log.e("getActivity()", "getActivity() is null in HomeFragment()");
+            Log.e("ERROR", "getActivity() is null in HomeFragment()");
 
 
         mCalendar = CalendarHelper.getCalendar();
@@ -192,7 +192,7 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        System.out.println("--------------------------SAVE INSTANCE HomeFragment");
+        Log.d("onSaveInstanceState", "HomeFragment");
         super.onSaveInstanceState(outState);
     }
 
@@ -284,7 +284,7 @@ public class HomeFragment extends Fragment {
         String selectedDateStr = CalendarHelper.formatFullDate(mCalendar.getTime());
         long selectedDateLong = mCalendar.getTimeInMillis();
 
-        System.out.println("selectedDateStr: "+selectedDateStr+", selectedDateLong: "+selectedDateLong);
+        Log.d("saveToDB", "selectedDateStr: "+selectedDateStr+", selectedDateLong: "+selectedDateLong);
 
         mDbHelper.saveToDB(selectedDateStr, selectedDateLong, mEatenKcal.getText().toString(), mSpentKcal.getText().toString(), mWeight.getText().toString(),
                 mKDay.getText().toString(), mKcalDifferenceTV.getText().toString(), mKcalDifferencePercentTV.getText().toString());

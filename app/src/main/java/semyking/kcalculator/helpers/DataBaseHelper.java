@@ -3,6 +3,7 @@ package semyking.kcalculator.helpers;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
+import semyking.kcalculator.R;
 import semyking.kcalculator.database.DataBase;
 import semyking.kcalculator.database.KcalData;
 import semyking.kcalculator.database.KcalDataModel;
@@ -121,7 +122,7 @@ public class DataBaseHelper {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Toast.makeText(mContext, "IMPORT SUCCESSFUL", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mContext, R.string.export_successful, Toast.LENGTH_SHORT).show();
     }
 
     public KcalData getSelectedDayData(long date_l) {

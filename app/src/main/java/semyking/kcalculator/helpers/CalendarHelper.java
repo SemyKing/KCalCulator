@@ -30,15 +30,15 @@ public class CalendarHelper {
         return shortDateFormatter.format(date);
     }
 
-    public static Date parseDate(String dateString) {
-        Date date = new Date();
-        try {
-            date = fullDateFormatter.parse(dateString);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return date;
-    }
+//    public static Date parseDate(String dateString) {
+//        Date date = new Date();
+//        try {
+//            date = fullDateFormatter.parse(dateString);
+//        } catch (ParseException e) {
+//            e.printStackTrace();
+//        }
+//        return date;
+//    }
 
     public static boolean dateBetween(Long milliSeconds, Calendar fromCal, Calendar toCal) {
 

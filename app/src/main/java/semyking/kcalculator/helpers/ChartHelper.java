@@ -82,7 +82,6 @@ public class ChartHelper {
     }
 
 
-
     public void updateChartData(LineChart chart, Calendar fromCal, Calendar toCal) {
         Day day = null;
         if (mDataStorage.getSelectedDay() != null) {

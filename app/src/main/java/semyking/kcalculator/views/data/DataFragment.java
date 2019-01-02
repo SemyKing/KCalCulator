@@ -40,7 +40,7 @@ public class DataFragment extends Fragment {
 
             ProgressDialog progressDialog;
             progressDialog = new ProgressDialog(getActivity());
-            progressDialog.setMessage("Loading...");
+            progressDialog.setMessage(getString(R.string.loading));
             progressDialog.setIndeterminate(false);
             progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             progressDialog.setCancelable(true);
@@ -56,7 +56,7 @@ public class DataFragment extends Fragment {
             ListView listView = view.findViewById(R.id.data_listView);
             listView.setAdapter(adapter);
         } else
-            Log.e("getActivity()", "getActivity() is null in DataFragment onCreateView()");
+            Log.e("ERROR", "getActivity() is null in DataFragment onCreateView()");
 
 
         Log.d("viewLoaded", "DataFragment");
@@ -65,7 +65,7 @@ public class DataFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        System.out.println("--------------------------SAVE INSTANCE DataFragment");
+        Log.d("onSaveInstanceState", "DataFragment");
         super.onSaveInstanceState(outState);
     }
 

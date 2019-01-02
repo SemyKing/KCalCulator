@@ -12,18 +12,16 @@ public class DataStorage extends ViewModel {
     public Day getSelectedDay() {
         return selectedDay;
     }
-
     public void setSelectedDay(Day selectedDay) {
         this.selectedDay = selectedDay;
     }
 
 
-    public Long fromCalDate, toCalDate;
+    private Long fromCalDate, toCalDate;
 
     public Long getFromCalDate() {
         return fromCalDate;
     }
-
     public void setFromCalDate(long newDate) {
         fromCalDate = newDate;
     }
@@ -31,7 +29,6 @@ public class DataStorage extends ViewModel {
     public Long getToCalDate() {
         return toCalDate;
     }
-
     public void setToCalDate(long newDate) {
         toCalDate = newDate;
     }

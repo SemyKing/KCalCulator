@@ -1,29 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             android:layout_width="match_parent"
                                              android:layout_height="match_parent">
 
-    <Button
-            android:text="IMPORT CSV TO DB"
+    <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:id="@+id/importButton"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
-    <Button
-            android:text="CLEAR DB"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/export_layout" android:clickable="true"
+            android:background="?attr/selectableItemBackground" android:focusable="true">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_export"
+                android:id="@+id/export_image"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+                android:contentDescription="@string/export_title"/>
+        <TextView
+                android:text="@string/export_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/export_title_tv" app:layout_constraintStart_toEndOf="@+id/export_image"
+                android:layout_marginStart="16dp" app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+        <TextView
+                android:text="@string/export_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/export_text_tv" app:layout_constraintStart_toEndOf="@+id/export_image"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/export_title_tv" android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"/>
+    </android.support.constraint.ConstraintLayout>
+
+    <View
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:id="@+id/deleteButton"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
-            android:layout_marginBottom="55dp" app:layout_constraintBottom_toTopOf="@+id/exportButton"
-            app:layout_constraintHorizontal_bias="0.0"/>
-    <Button
-            android:text="EXPORT FROM DB TO CSV"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/line1" app:layout_constraintTop_toBottomOf="@+id/export_layout"/>
+
+    <android.support.constraint.ConstraintLayout
             android:layout_width="0dp"
-            android:layout_height="wrap_content" android:id="@+id/exportButton"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintBottom_toTopOf="@+id/importButton"/>
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/import_layout"
+            app:layout_constraintHorizontal_bias="0.0" app:layout_constraintTop_toBottomOf="@+id/line1"
+            android:clickable="true" android:background="?attr/selectableItemBackground" android:focusable="true">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_import"
+                android:id="@+id/import_image"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+                android:contentDescription="@string/import_title"/>
+        <TextView
+                android:text="@string/import_title"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/import_title_tv" app:layout_constraintStart_toEndOf="@+id/import_image"
+                android:layout_marginStart="16dp" app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+        <TextView
+                android:text="@string/import_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/import_text_tv" app:layout_constraintStart_toEndOf="@+id/import_image"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/import_title_tv" android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+        />
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/import_layout" android:id="@+id/line2"/>
+
+    <android.support.constraint.ConstraintLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/clearDB_layout"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintTop_toBottomOf="@+id/line2" android:clickable="true"
+            android:background="?attr/selectableItemBackground" android:focusable="true">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" app:srcCompat="@drawable/ic_trash"
+                android:id="@+id/clearDB_image"
+                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+                android:contentDescription="@string/clear_db"/>
+        <TextView
+                android:text="@string/clear_db"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:id="@+id/clearDB_title_tv" app:layout_constraintStart_toEndOf="@+id/clearDB_image"
+                android:layout_marginStart="16dp" app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"/>
+        <TextView
+                android:text="@string/clear_db_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:id="@+id/clearDB_text_tv" app:layout_constraintStart_toEndOf="@+id/clearDB_image"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/clearDB_title_tv" android:layout_marginEnd="8dp"
+                app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="8dp"
+        />
+    </android.support.constraint.ConstraintLayout>
+
+    <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:background="@android:color/darker_gray" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/clearDB_layout" android:id="@+id/line3"/>
 </android.support.constraint.ConstraintLayout>

@@ -20,6 +20,9 @@ import semyking.kcalculator.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+/**
+ * Copy from GitHub project (CollapsibleCalendar) with necessary custom modifications
+ */
 public class CustomCollapsibleCalendar extends UICalendar {
     private CalendarAdapter mAdapter;
     private CustomCollapsibleCalendar.CalendarListener mListener;
@@ -248,7 +251,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
         }
     }
 
-    public void onItemClicked(View view, Day day) {
+    private void onItemClicked(View view, Day day) {
         this.select(day);
         Calendar cal = this.mAdapter.getCalendar();
         int newYear = day.getYear();
@@ -320,7 +323,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
 
     }
 
-    public void prevWeek() {
+    private void prevWeek() {
         if (this.mCurrentWeekIndex - 1 < 0) {
             this.mCurrentWeekIndex = -1;
             this.prevMonth();
@@ -331,7 +334,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
 
     }
 
-    public void nextWeek() {
+    private void nextWeek() {
         if (this.mCurrentWeekIndex + 1 >= this.mTableBody.getChildCount()) {
             this.mCurrentWeekIndex = 0;
             this.nextMonth();
@@ -363,16 +366,16 @@ public class CustomCollapsibleCalendar extends UICalendar {
         }
     }
 
-    public boolean isSelectedDay(Day day) {
+    private boolean isSelectedDay(Day day) {
         return day != null && this.getSelectedItem() != null && day.getYear() == this.getSelectedItem().getYear() && day.getMonth() == this.getSelectedItem().getMonth() && day.getDay() == this.getSelectedItem().getDay();
     }
 
-    public boolean isToady(Day day) {
+    private boolean isToady(Day day) {
         Calendar todayCal = Calendar.getInstance();
         return day != null && day.getYear() == todayCal.get(Calendar.YEAR) && day.getMonth() == todayCal.get(Calendar.MONTH) && day.getDay() == todayCal.get(Calendar.DATE);
     }
 
-    public int getSelectedItemPosition() {
+    private int getSelectedItemPosition() {
         int position = -1;
 
         for(int i = 0; i < this.mAdapter.getCount(); ++i) {
@@ -386,7 +389,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
         return position;
     }
 
-    public int getTodayItemPosition() {
+    private int getTodayItemPosition() {
         int position = -1;
 
         for(int i = 0; i < this.mAdapter.getCount(); ++i) {
@@ -401,7 +404,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
     }
 
     private int tempHeight;
-    public void collapse(int duration) {
+    private void collapse(int duration) {
         if (this.getState() == 0) {
             this.setState(2);
             this.mLayoutBtnGroupMonth.setVisibility(View.INVISIBLE);
@@ -499,7 +502,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
         }
     }
 
-    public void expand(int duration) {
+    private void expand(int duration) {
         if (this.getState() == 1) {
             this.setState(2);
 //            this.mLayoutBtnGroupMonth.setVisibility(0);

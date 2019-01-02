@@ -54,7 +54,7 @@ public class ChartsFragment extends Fragment {
             mDataStorage = ((MainActivity) getActivity()).getDataStorage();
             mChartHelper = new ChartHelper(getActivity());
         } else
-            Log.e("getActivity()", "getActivity() is null in ChartsFragment()");
+            Log.e("ERROR", "getActivity() is null in ChartsFragment()");
 
         mFromCalendar = CalendarHelper.getCalendar();
         mToCalendar = CalendarHelper.getCalendar();
@@ -82,7 +82,6 @@ public class ChartsFragment extends Fragment {
             }
             @Override
             public void onNothingSelected() {
-
             }
         });
 
