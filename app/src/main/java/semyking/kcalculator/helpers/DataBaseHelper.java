@@ -2,6 +2,7 @@ package semyking.kcalculator.helpers;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 import semyking.kcalculator.database.DataBase;
 import semyking.kcalculator.database.KcalData;
 import semyking.kcalculator.database.KcalDataModel;
@@ -11,45 +12,47 @@ import java.util.*;
 
 public class DataBaseHelper {
 
-    private IModel<KcalData, String> db;
-    private List<KcalData> allData;
+    private final Context mContext;
+    private final IModel<KcalData, String> mDB;
+    private List<KcalData> mAllData;
 
     private Calendar mCalendar1, mCalendar2;
 
-    public DataBaseHelper(Context context) {
-        db = KcalDataModel.getInstance(DataBase.getDatabase(context));
+    private static DataBaseHelper mDataBaseHelper;
 
-        mCalendar1 = Calendar.getInstance(Locale.GERMAN);
-        mCalendar1.set(Calendar.HOUR_OF_DAY, 0);
-        mCalendar1.set(Calendar.MINUTE, 0);
-        mCalendar1.set(Calendar.SECOND, 0);
-        mCalendar1.set(Calendar.MILLISECOND, 0);
+    private DataBaseHelper(final Context context) {
+        mContext = context;
+        mDB = KcalDataModel.getInstance(DataBase.getDatabase(mContext));
 
-        mCalendar2 = Calendar.getInstance(Locale.GERMAN);
-        mCalendar2.set(Calendar.HOUR_OF_DAY, 0);
-        mCalendar2.set(Calendar.MINUTE, 0);
-        mCalendar2.set(Calendar.SECOND, 0);
-        mCalendar2.set(Calendar.MILLISECOND, 0);
+        mCalendar1 = CalendarHelper.getCalendar();
+        mCalendar2 = CalendarHelper.getCalendar();
 
-        allData = new ArrayList<>();
+        mAllData = new ArrayList<>();
         getAll();
     }
 
-    private boolean allDataLoaded = false;
+    public static DataBaseHelper getInstance(final Context context) {
+        if (mDataBaseHelper == null) {
+            mDataBaseHelper = new DataBaseHelper(context);
+        }
+        return mDataBaseHelper;
+    }
+
+    private boolean mAllDataLoaded = false;
 
     private void getAll() {
-        allDataLoaded = false;
-        db.loadAll(new IModel.LoadAllItemsCallback<KcalData>() {
+        mAllDataLoaded = false;
+        mDB.loadAll(new IModel.LoadAllItemsCallback<KcalData>() {
             @Override
             public void onDataNotAvailable(String str) {
-                allDataLoaded = true;
+                mAllDataLoaded = true;
                 Log.i("getAll from DB", str);
             }
 
             @Override
             public void onItemsLoaded(List<KcalData> list) {
-                allData = getSortedList(list);
-                allDataLoaded = true;
+                mAllData = getSortedList(list);
+                mAllDataLoaded = true;
             }
         });
     }
@@ -58,7 +61,7 @@ public class DataBaseHelper {
         List<KcalData> sorted = new ArrayList<>();
         sorted.addAll(list);
 
-        Collections.sort(allData, new Comparator<KcalData>() {
+        Collections.sort(sorted, new Comparator<KcalData>() {
             public int compare(KcalData o1, KcalData o2) {
                 mCalendar1.setTimeInMillis(o1.getDate_long());
                 mCalendar2.setTimeInMillis(o2.getDate_long());
@@ -87,38 +90,72 @@ public class DataBaseHelper {
         kd.setKcalDifference(difference);
         kd.setKcalDifferencePercent(differencePercent);
 
-        db.saveItem(new IModel.ItemSaveCallback<KcalData>() {
+        mDB.saveItem(new IModel.ItemSaveCallback<KcalData>() {
             @Override
             public void onItemSaved(int status) {
                 if (status == IModel.INSERT) {
-                    allData.add(kd);
-                    allData = getSortedList(allData);
+                    mAllData.add(kd);
+                    mAllData = getSortedList(mAllData);
+                } else if (status == IModel.UPDATE) {
+                    for (KcalData kcalData : mAllData) {
+                        if (kcalData.getDate_long().equals(kd.getDate_long())) {
+                            mAllData.set(mAllData.indexOf(kcalData), kd);
+                        }
+                    }
                 }
             }
         }, kd);
     }
 
+    public void saveImportedData(List<KcalData> importedData) {
+        try {
+            for(final KcalData kd : importedData) {
+                mDB.saveItem(new IModel.ItemSaveCallback<KcalData>() {
+                    @Override
+                    public void onItemSaved(int status) {
+
+                    }
+                }, kd);
+            }
+            getAll();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        Toast.makeText(mContext, "IMPORT SUCCESSFUL", Toast.LENGTH_SHORT).show();
+    }
+
     public KcalData getSelectedDayData(long date_l) {
-        for ( KcalData data : allData ) {
+        KcalData kcalData = new KcalData();
+        kcalData.setDate_long(date_l);
+
+        for ( KcalData data : mAllData) {
             if (data.getDate_long().equals(date_l)) {
-                return data;
+
+                kcalData.setSpentKcal(data.getSpentKcal());
+                kcalData.setEatenKcal(data.getEatenKcal());
+                kcalData.setWeight(data.getWeight());
+                kcalData.setKDay(data.getKDay());
+
+                break;
             }
 
         }
-        return null;
+
+        return kcalData;
     }
 
     public void deleteAllFromDB() {
-        db.deleteAll();
+        mDB.deleteAll();
+        mAllData.clear();
     }
 
     public boolean isAllDataLoaded() {
-        return allDataLoaded;
+        return mAllDataLoaded;
     }
 
     public List<KcalData> getAllData() {
         List<KcalData> result = new ArrayList<>();
-        result.addAll(allData);
+        result.addAll(mAllData);
         return result;
     }
 }

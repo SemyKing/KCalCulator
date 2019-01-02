@@ -30,12 +30,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             android:gravity="center"/>
     <TextView
-            android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/data_weight"
             app:layout_constraintStart_toEndOf="@+id/data_eatenKcal"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toStartOf="@+id/data_kcalDifference"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:gravity="center"/>
+            app:layout_constraintBottom_toBottomOf="parent" android:gravity="center" android:layout_width="0dp"/>
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -53,12 +52,11 @@
             app:layout_constraintEnd_toStartOf="@+id/data_kday" app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" android:gravity="center"/>
     <TextView
-            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:id="@+id/data_kday"
             app:layout_constraintStart_toEndOf="@+id/data_kcalDifferencePercent"
             app:layout_constraintHorizontal_bias="0.5" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:gravity="center"/>
+            android:gravity="center" android:layout_width="0dp"/>
 </android.support.constraint.ConstraintLayout>

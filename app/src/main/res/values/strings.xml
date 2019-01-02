@@ -53,10 +53,26 @@
     <string name="kday">K.Day</string>
     <string name="today">Today</string>
     <string name="week">WEEK: </string>
-    <string name="empty"/>
+    <string name="empty"></string>
     <string name="kcal">KCAL</string>
     <string name="todo">TODO</string>
     <string name="kg">KG</string>
     <string name="save">Save</string>
+    <string name="saved">Saved</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="confirm_db_clear_title">Confirm database delete</string>
+    <string name="confirm_db_clear_msg">You are about to delete all records of database. Do you really want to proceed ?</string>
+    <string name="db_clear_successful">Database cleared</string>
+    <string name="export_successful">Export successful</string>
+    <string name="select_import_file">Select file to import</string>
+    <string name="export_title">Export</string>
+    <string name="export_text">Export data from Database to CSV file</string>
+    <string name="import_title">Import</string>
+    <string name="import_text">Import data from CSV into Database. Local data will be overwritten.</string>
+    <string name="clear_db">Clear Database</string>
+    <string name="clear_db_text">Delete all records from local Database</string>
 
 </resources>

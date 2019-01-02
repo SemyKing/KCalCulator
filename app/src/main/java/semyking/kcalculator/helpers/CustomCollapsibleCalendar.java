@@ -471,7 +471,7 @@ public class CustomCollapsibleCalendar extends UICalendar {
         }
     }
 
-    public void collapseToToday() {
+    public void collapseToSelectedDay() {
         if (this.getState() == 1) {
             int index = getSuitableRowIndex();
             if (index == -1) {

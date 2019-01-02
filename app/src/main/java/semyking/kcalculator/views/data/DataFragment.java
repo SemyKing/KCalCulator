@@ -25,7 +25,7 @@ public class DataFragment extends Fragment {
     public DataFragment() {
     }
 
-    private DataBaseHelper dataBaseHelper;
+    private DataBaseHelper dbHelper;
 
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
@@ -35,7 +35,7 @@ public class DataFragment extends Fragment {
         View view = layoutInflater.inflate(R.layout.data_layout, viewGroup, false);
 
         if (getActivity() != null) {
-            dataBaseHelper = new DataBaseHelper(getActivity());
+            dbHelper = DataBaseHelper.getInstance(getActivity());
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
             ProgressDialog progressDialog;
@@ -48,10 +48,10 @@ public class DataFragment extends Fragment {
 
             do {
                 //WAIT FOR DATA TO LOAD FROM DB
-            } while (!dataBaseHelper.isAllDataLoaded());
+            } while (!dbHelper.isAllDataLoaded());
 
             progressDialog.dismiss();
-            DataListAdapter adapter = new DataListAdapter(getActivity(), dataBaseHelper.getAllData());
+            DataListAdapter adapter = new DataListAdapter(getActivity(), dbHelper.getAllData());
 
             ListView listView = view.findViewById(R.id.data_listView);
             listView.setAdapter(adapter);
@@ -59,15 +59,15 @@ public class DataFragment extends Fragment {
             Log.e("getActivity()", "getActivity() is null in DataFragment onCreateView()");
 
 
-        System.out.println("----------DATA DRAWN");
+        Log.d("viewLoaded", "DataFragment");
         return view;
     }
 
-
-
-
-
-
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        System.out.println("--------------------------SAVE INSTANCE DataFragment");
+        super.onSaveInstanceState(outState);
+    }
 
     public class DataListAdapter extends ArrayAdapter<KcalData> {
 
@@ -95,7 +95,7 @@ public class DataFragment extends Fragment {
 
         @NonNull
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
             KcalData kd = getItem(position);
 
             if (convertView == null){
@@ -110,15 +110,17 @@ public class DataFragment extends Fragment {
             TextView data_kcalDifferencePercent =   convertView.findViewById(R.id.data_kcalDifferencePercent);
             TextView data_kday =                    convertView.findViewById(R.id.data_kday);
 
-            data_date.setText(      kd.getDate_string());
-            data_spentKcal.setText( kd.getSpentKcal());
-            data_eatenKcal.setText(kd.getEatenKcal());
-            data_weight.setText(    kd.getWeight());
+            if (kd != null) {
+                data_date.setText(      kd.getDate_string());
+                data_spentKcal.setText( kd.getSpentKcal());
+                data_eatenKcal.setText(kd.getEatenKcal());
+                data_weight.setText(    kd.getWeight());
 
-            setDifference( data_kcalDifference, kd.getKcalDifference() );
-            setDifference( data_kcalDifferencePercent, kd.getKcalDifferencePercent() );
+                setDifference( data_kcalDifference, kd.getKcalDifference() );
+                setDifference( data_kcalDifferencePercent, kd.getKcalDifferencePercent() );
 
-            data_kday.setText(      kd.getKDay());
+                data_kday.setText(      kd.getKDay());
+            }
 
             return convertView;
         }

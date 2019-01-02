@@ -49,7 +49,7 @@ public class KcalDataModel implements IModel<KcalData, String> {
         this.worker.registerTask(new Runnable() {
             @Override
             public void run() {
-                int id = dataBase.kcalDataDao().getIdByDate(kcalData.getDate_long());
+                long id = dataBase.kcalDataDao().getIdByDate(kcalData.getDate_long());
 
                 if (itemSaveCallback == null) {
                     System.out.println("-----itemSaveCallback = null");
@@ -57,11 +57,10 @@ public class KcalDataModel implements IModel<KcalData, String> {
                 }
                 if (id == 0) {
                     dataBase.kcalDataDao().insert(kcalData);
-                    System.out.println("-----itemSaveCallback = INSERT");
                     itemSaveCallback.onItemSaved(INSERT);
                 } else {
+                    kcalData.setId(id);
                     dataBase.kcalDataDao().updateKcalData(kcalData);
-                    System.out.println("-----itemSaveCallback = UPDATE");
                     itemSaveCallback.onItemSaved(UPDATE);
                 }
             }

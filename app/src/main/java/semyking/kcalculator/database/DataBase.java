@@ -11,7 +11,7 @@ public abstract class DataBase extends RoomDatabase {
 
     abstract KcalDataDao kcalDataDao();
 
-    public static DataBase getDatabase(Context context) {
+    public static DataBase getDatabase(final Context context) {
         if (INSTANCE == null && INSTANCE == null) {
             INSTANCE = (DataBase) Room.databaseBuilder(context.getApplicationContext(), DataBase.class, "KcalCulator.db").fallbackToDestructiveMigration().build();
         }

@@ -1,120 +1,64 @@
 package semyking.kcalculator;
 
-import android.content.Context;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 import semyking.kcalculator.helpers.BottomNavigationViewHelper;
-import semyking.kcalculator.views.CustomViewPager;
-import semyking.kcalculator.views.ViewPagerAdapter;
+import semyking.kcalculator.helpers.DataBaseHelper;
+import semyking.kcalculator.views.DataStorage;
 import semyking.kcalculator.views.charts.ChartsFragment;
 import semyking.kcalculator.views.data.DataFragment;
 import semyking.kcalculator.views.home.HomeFragment;
 import semyking.kcalculator.views.settings.SettingsFragment;
 
+import java.io.File;
+
 public class MainActivity extends AppCompatActivity {
 
-    private MenuItem prevMenuItem;
-//    private ViewPager viewPager;
-    private CustomViewPager viewPager;
+    private DataStorage dataStorage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        System.out.println("-------------NEW ACTIVITY-------------");
+
+        if (savedInstanceState != null) {
+            viewId = savedInstanceState.getInt("viewId");
+        }
 
         setContentView(R.layout.activity_main);
 
-        viewPager = findViewById(R.id.viewPager);
-//        viewPager.setOffscreenPageLimit(3);
-
-        final BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation_view);
+        bottomNavigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         BottomNavigationViewHelper.disableShiftMode(bottomNavigationView);
 
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_home:
+        dataStorage = ViewModelProviders.of(this).get(DataStorage.class);
+
+        final DataBaseHelper dbHelper = DataBaseHelper.getInstance(this);
+
+        if (viewId != 0)
+            bottomNavigationView.setSelectedItemId(viewId);
+        else
+            bottomNavigationView.setSelectedItemId(R.id.navigation_home);
 
 
-                        viewPager.setCurrentItem(0);
-                        break;
-                    case R.id.navigation_chart:
 
+        File appDir = new File(this.getExternalFilesDir(null), "KcalCulator");
 
-                        viewPager.setCurrentItem(1);
-                        break;
-                    case R.id.navigation_data:
-
-
-                        viewPager.setCurrentItem(2);
-                        break;
-                    case R.id.navigation_settings:
-
-
-                        viewPager.setCurrentItem(3);
-                        break;
-                }
-                return false;
+        if (!appDir.exists()) {
+            if (!appDir.mkdirs()) {
+                Log.e("appDir", "Directory not created");
             }
-        });
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-            @Override
-            public void onPageSelected(int position) {
-                if (prevMenuItem != null) {
-                    prevMenuItem.setChecked(false);
-                } else {
-                    bottomNavigationView.getMenu().getItem(0).setChecked(false);
-                }
-                bottomNavigationView.getMenu().getItem(position).setChecked(true);
-                prevMenuItem = bottomNavigationView.getMenu().getItem(position);
-
-                // Close keyboard on view change
-                InputMethodManager imm = (InputMethodManager)viewPager.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) {
-                    imm.hideSoftInputFromWindow(viewPager.getWindowToken(), 0);
-                }
-            }
-            @Override
-            public void onPageScrollStateChanged(int state) {
-            }
-        });
-
-
-        setupViewPager(viewPager);
-
-    }
-
-
-    private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager());
-
-        HomeFragment        homeFragment        = new HomeFragment();
-        ChartsFragment      chartsFragment      = new ChartsFragment();
-        DataFragment        dataFragment        = new DataFragment();
-        SettingsFragment    settingsFragment    = new SettingsFragment();
-
-        viewPagerAdapter.addFragment(homeFragment);
-        viewPagerAdapter.addFragment(chartsFragment);
-        viewPagerAdapter.addFragment(dataFragment);
-        viewPagerAdapter.addFragment(settingsFragment);
-
-        viewPager.setAdapter(viewPagerAdapter);
+        }
     }
 
     @Override
@@ -145,9 +89,61 @@ public class MainActivity extends AppCompatActivity {
         }, 3000);
     }
 
+    private int viewId;
+    private HomeFragment homeFragment = new HomeFragment();
+    private ChartsFragment chartsFragment = new ChartsFragment();
+    private DataFragment dataFragment = new DataFragment();
+    private SettingsFragment settingsFragment = new SettingsFragment();
+
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
+        MenuItem prevItem = null;
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+            if (prevItem == item) {
+                return false;
+            }
+            prevItem = item;
+
+            switch (item.getItemId()) {
+                case R.id.navigation_home:
+                    viewId = R.id.navigation_home;
+                    switchFragment(homeFragment, HomeFragment.TAG);
+                    return true;
+                case R.id.navigation_chart:
+                    viewId = R.id.navigation_chart;
+                    switchFragment(chartsFragment, ChartsFragment.TAG);
+                    return true;
+                case R.id.navigation_data:
+                    viewId = R.id.navigation_data;
+                    switchFragment(dataFragment, DataFragment.TAG);
+                    return true;
+
+                case R.id.navigation_settings:
+                    viewId = R.id.navigation_settings;
+                    switchFragment(settingsFragment, SettingsFragment.TAG);
+                    return true;
+            }
+            return false;
+        }
+    };
+
+    private void switchFragment(Fragment newFragment, String tag) {
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_container, newFragment, tag);
+        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.commit();
+    }
+
+
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putInt("viewId", viewId);
     }
 
+
+    public DataStorage getDataStorage() {
+        return dataStorage;
+    }
 }

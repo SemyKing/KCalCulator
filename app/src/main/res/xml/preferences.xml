@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <EditTextPreference
+            android:selectAllOnFocus="true"
+            android:title="@string/export_title"
+            android:summary="@string/export_text"
+            android:key="export_edit_text"/>
+
+    <EditTextPreference
+            android:selectAllOnFocus="true"
+            android:title="@string/import_title"
+            android:summary="@string/import_text"
+            android:key="import_edit_text"/>
+
+    <EditTextPreference
+            android:selectAllOnFocus="true"
+            android:title="@string/clear_db"
+            android:summary="@string/clear_db_text"
+            android:key="clear_db_edit_text"/>
+</PreferenceScreen>

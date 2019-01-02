@@ -18,83 +18,88 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+import com.github.mikephil.charting.charts.LineChart;
 import com.shrikanthravi.collapsiblecalendarview.data.CalendarAdapter;
 import com.shrikanthravi.collapsiblecalendarview.data.Day;
+import semyking.kcalculator.MainActivity;
 import semyking.kcalculator.R;
 import semyking.kcalculator.database.KcalData;
+import semyking.kcalculator.helpers.CalendarHelper;
+import semyking.kcalculator.helpers.ChartHelper;
 import semyking.kcalculator.helpers.CustomCollapsibleCalendar;
 import semyking.kcalculator.helpers.DataBaseHelper;
+import semyking.kcalculator.views.DataStorage;
 
 import java.util.Calendar;
-import java.util.Locale;
 
 public class HomeFragment extends Fragment {
     public static final String TAG = HomeFragment.class.getSimpleName();
 
-    public HomeFragment() {}
+    public HomeFragment() {
+
+    }
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    private DataBaseHelper dbHelper;
+    private DataStorage mDataStorage;
+
+    private DataBaseHelper mDbHelper;
     private Calendar mCalendar;
+    private LineChart lineChart;
+    private ChartHelper mChartHelper;
 
     private CustomCollapsibleCalendar mCollapsibleCalendar;
     private Day mToday, mSelectedDay;
 
-    private EditText mSpentKcal, mEatenKcal, mWeight, mKDay;
-    private TextView kcalDifferenceTV;
-    private TextView kcalDifferencePercentTV;
-    private TextView mWeekOfYear;
+    private TextInputEditText mSpentKcal, mEatenKcal, mWeight, mKDay;
+    private TextView mKcalDifferenceTV, mKcalDifferencePercentTV;
 
-    private Button saveButton;
+    private Button mSaveButton;
 
     public View onCreateView(@NonNull LayoutInflater layoutInflater, ViewGroup viewGroup, Bundle savedInstanceState ) {
         View view = layoutInflater.inflate(R.layout.home_layout, viewGroup, false);
 
         if (getActivity() != null) {
-            dbHelper = new DataBaseHelper(getActivity());
             getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            mDbHelper = DataBaseHelper.getInstance(getActivity());
+            mDataStorage = ((MainActivity) getActivity()).getDataStorage();
         } else
-            Log.e("getActivity()", "getActivity() is null in HomeFragment() constructor");
+            Log.e("getActivity()", "getActivity() is null in HomeFragment()");
 
-//        dbHelper.deleteAllFromDB();
 
-        mCalendar = Calendar.getInstance(Locale.GERMAN);
-        mCalendar.set(Calendar.HOUR_OF_DAY, 0);
-        mCalendar.set(Calendar.MINUTE, 0);
-        mCalendar.set(Calendar.SECOND, 0);
-        mCalendar.set(Calendar.MILLISECOND, 0);
+        mCalendar = CalendarHelper.getCalendar();
         mToday = new Day(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH)); //year, month, day
 
         mCollapsibleCalendar = view.findViewById(R.id.calendarView);
         mCollapsibleCalendar.initCalendarSwipeGesture();
         mCollapsibleCalendar.setFirstDayOfWeek(1); //MONDAY
 
-        mWeekOfYear = mCollapsibleCalendar.findViewById(R.id.mWeekOfYear);
+        final TextView weekOfYearTextView = mCollapsibleCalendar.findViewById(R.id.weekOfYearTextView);
 
-        TextView calendar_today_TV = mCollapsibleCalendar.findViewById(R.id.calendar_today_TV);
-        calendar_today_TV.setOnClickListener(new View.OnClickListener() {
+        final TextView calendarTodayTextView = mCollapsibleCalendar.findViewById(R.id.calendarTodayTextView);
+        calendarTodayTextView.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                selectToday();
+                scrollToDay(mToday);
             }
         });
 
-        CalendarAdapter mAdapter = new CalendarAdapter(getActivity(), mCalendar);
-        mAdapter.setFirstDayOfWeek(1);
-        mAdapter.refresh();
+        final CalendarAdapter calendarAdapter = new CalendarAdapter(getActivity(), mCalendar);
+        calendarAdapter.setFirstDayOfWeek(1);
+        calendarAdapter.refresh();
 
-        mCollapsibleCalendar.setAdapter(mAdapter);
+        mCollapsibleCalendar.setAdapter(calendarAdapter);
         mCollapsibleCalendar.setCalendarListener(new CustomCollapsibleCalendar.CalendarListener() {
             @Override
             public void onDaySelect() {
                 mSelectedDay = mCollapsibleCalendar.getSelectedDay();
+                mDataStorage.setSelectedDay(mSelectedDay);
                 mCalendar.set(mSelectedDay.getYear(), mSelectedDay.getMonth(), mSelectedDay.getDay());
+                weekOfYearTextView.setText(String.valueOf(mCalendar.get(Calendar.WEEK_OF_YEAR)));
 
-                mWeekOfYear.setText(String.valueOf(mCalendar.get(Calendar.WEEK_OF_YEAR)));
-
-                getSelectedDayData();
+                setSelectedDayData();
             }
             @Override
             public void onItemClick(View view) {
@@ -110,8 +115,8 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        kcalDifferenceTV = view.findViewById(R.id.difference_TV);
-        kcalDifferencePercentTV = view.findViewById(R.id.difference_percent_TV);
+        mKcalDifferenceTV = view.findViewById(R.id.difference_TV);
+        mKcalDifferencePercentTV = view.findViewById(R.id.difference_percent_TV);
 
         mSpentKcal = view.findViewById(R.id.spent_EditText);
         mSpentKcal.setOnEditorActionListener(mEditTextListener);
@@ -130,30 +135,30 @@ public class HomeFragment extends Fragment {
         view.findViewById(R.id.spentInputLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mSpentKcal.requestFocus();
+                selectAndOpenKeyboard(mSpentKcal);
             }
         });
         view.findViewById(R.id.eatenInputLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEatenKcal.requestFocus();
+                selectAndOpenKeyboard(mEatenKcal);
             }
         });
         view.findViewById(R.id.weightInputLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mWeight.requestFocus();
+                selectAndOpenKeyboard(mWeight);
             }
         });
         view.findViewById(R.id.kdayInputLayout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mKDay.requestFocus();
+                selectAndOpenKeyboard(mKDay);
             }
         });
 
-        saveButton = view.findViewById(R.id.saveButton);
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        mSaveButton = view.findViewById(R.id.saveButton);
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 saveToDB();
@@ -161,37 +166,35 @@ public class HomeFragment extends Fragment {
         });
 
 
-//        System.out.println("---------savedInstanceState: "+savedInstanceState);
-//        if (savedInstanceState != null) {
-//            System.out.println("---------"+savedInstanceState.getBoolean("daySelected"));
-//            if (savedInstanceState.getBoolean("daySelected")) {
-//                Day d = new Day(savedInstanceState.getInt("year"), savedInstanceState.getInt("month"), savedInstanceState.getInt("day"));
-//                System.out.println("---------"+d);
-//                mCollapsibleCalendar.select(d);
-//            }
-//        } else {
-//
-//        }
+        //LineChart
+        mChartHelper = new ChartHelper(getActivity());
+        lineChart = view.findViewById(R.id.lineChart);
+        lineChart = mChartHelper.initLineChart(lineChart);
 
-        selectToday();
+        if (mDataStorage != null) {
+            if (mDataStorage.getSelectedDay() != null) {
+                mCollapsibleCalendar.select(mDataStorage.getSelectedDay());
+                scrollToDay(mSelectedDay);
+            } else
+                scrollToDay(mToday);
+        }
 
-        System.out.println("----------HOME DRAWN");
+        Log.d("viewLoaded", "HomeFragment");
         return view;
     }
 
+    private void selectAndOpenKeyboard(TextInputEditText textInputEditText) {
+        textInputEditText.requestFocus();
+        InputMethodManager imm = (InputMethodManager) mSaveButton.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null)
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        System.out.println("--------------------------SAVE INSTANCE");
-
+        System.out.println("--------------------------SAVE INSTANCE HomeFragment");
         super.onSaveInstanceState(outState);
-        outState.putBoolean("daySelected", true);
-        outState.putInt("year", mSelectedDay.getYear());
-        outState.putInt("month", mSelectedDay.getMonth());
-        outState.putInt("day", mSelectedDay.getDay());
-
     }
-
 
     private EditText.OnEditorActionListener mEditTextListener = new EditText.OnEditorActionListener() {
         @Override
@@ -199,7 +202,6 @@ public class HomeFragment extends Fragment {
             if (actionId == EditorInfo.IME_ACTION_NEXT) {
                 if (getView() != null) {
                     TextInputEditText next = getView().findViewById(v.getNextFocusForwardId());
-
                     if (next != null)
                         next.requestFocus();
                 }
@@ -219,94 +221,93 @@ public class HomeFragment extends Fragment {
         }
         public void onTextChanged(CharSequence s, int start, int before, int count) {
             if (mEatenKcal.getText().length() <= 0 || mSpentKcal.getText().length() <= 0) {
-                kcalDifferenceTV.setText("");
-                kcalDifferencePercentTV.setText("");
+                mKcalDifferenceTV.setText("");
+                mKcalDifferencePercentTV.setText("");
             } else
                 calculateKcalDifference();
         }
     };
 
-    private void selectToday() {
-        mCollapsibleCalendar.select(mToday);
+    private void scrollToDay(Day day) {
+        mCollapsibleCalendar.select(day);
 
-        if (mCollapsibleCalendar.getYear() != mToday.getYear()) {
-            if (mCollapsibleCalendar.getYear() < mToday.getYear()) {
+        if (mCollapsibleCalendar.getYear() != day.getYear()) {
+            if (mCollapsibleCalendar.getYear() < day.getYear()) {
                 do {
                     mCollapsibleCalendar.nextMonth();
-                } while (mCollapsibleCalendar.getYear() != mToday.getYear());
+                } while (mCollapsibleCalendar.getYear() != day.getYear());
             } else {
                 do {
                     mCollapsibleCalendar.prevMonth();
-                } while (mCollapsibleCalendar.getYear() != mToday.getYear());
+                } while (mCollapsibleCalendar.getYear() != day.getYear());
             }
         }
 
-        if (mCollapsibleCalendar.getMonth() != mToday.getMonth()) {
-            if (mCollapsibleCalendar.getMonth() < mToday.getMonth()) {
+        if (mCollapsibleCalendar.getMonth() != day.getMonth()) {
+            if (mCollapsibleCalendar.getMonth() < day.getMonth()) {
                 do {
                     mCollapsibleCalendar.nextMonth();
-                } while (mCollapsibleCalendar.getMonth() != mToday.getMonth());
+                } while (mCollapsibleCalendar.getMonth() != day.getMonth());
             } else {
                 do {
                     mCollapsibleCalendar.prevMonth();
-                } while (mCollapsibleCalendar.getMonth() != mToday.getMonth());
+                } while (mCollapsibleCalendar.getMonth() != day.getMonth());
             }
         }
 
-        mCollapsibleCalendar.collapseToToday();
+        mCollapsibleCalendar.collapseToSelectedDay();
     }
 
     private void calculateKcalDifference() {
         double spentD = Double.parseDouble(mSpentKcal.getText().toString().replaceAll(",", ".").replaceAll(" ", ""));
         double eatenD = Double.parseDouble(mEatenKcal.getText().toString().replaceAll(",", ".").replaceAll(" ", ""));
-        float spentF = ((float) Math.round((((float) eatenD) - ((float) spentD)) * 10.0f)) / 10.0f;
-        float eatenF = ((float) Math.round((((eatenD / spentD) * 100.0d) - 100) * 10.0d)) / 10.0f;
+        float dif = ((float) Math.round((((float) eatenD) - ((float) spentD)) * 10.0f)) / 10.0f;
+        float difPercent = ((float) Math.round((((eatenD / spentD) * 100.0d) - 100) * 10.0d)) / 10.0f;
 
-        if (spentF > 0.0f) {
-            this.kcalDifferenceTV.setTextColor(getResources().getColor(R.color.colorRed));
+        if (dif > 0.0f) {
+            this.mKcalDifferenceTV.setTextColor(getResources().getColor(R.color.colorRed));
         } else {
-            this.kcalDifferenceTV.setTextColor(getResources().getColor(R.color.colorGreen));
+            this.mKcalDifferenceTV.setTextColor(getResources().getColor(R.color.colorGreen));
         }
 
-        if (eatenF > 0.0f) {
-            this.kcalDifferencePercentTV.setTextColor(getResources().getColor(R.color.colorRed));
+        if (difPercent > 0.0f) {
+            this.mKcalDifferencePercentTV.setTextColor(getResources().getColor(R.color.colorRed));
         } else {
-            this.kcalDifferencePercentTV.setTextColor(getResources().getColor(R.color.colorGreen));
+            this.mKcalDifferencePercentTV.setTextColor(getResources().getColor(R.color.colorGreen));
         }
 
-        kcalDifferenceTV.setText(String.valueOf(spentF));
-
-        String difPercent = String.valueOf(eatenF) + " %";
-        kcalDifferencePercentTV.setText(difPercent);
+        mKcalDifferenceTV.setText(String.valueOf(dif));
+        mKcalDifferencePercentTV.setText(String.valueOf(difPercent));
     }
 
     private void saveToDB() {
-        String selectedDateStr = mSelectedDay.getDay()+"/"+(mSelectedDay.getMonth() +1)+"/"+mSelectedDay.getYear();
+        String selectedDateStr = CalendarHelper.formatFullDate(mCalendar.getTime());
         long selectedDateLong = mCalendar.getTimeInMillis();
 
-        dbHelper.saveToDB(selectedDateStr, selectedDateLong, mEatenKcal.getText().toString(), mSpentKcal.getText().toString(), mWeight.getText().toString(),
-                mKDay.getText().toString(), kcalDifferenceTV.getText().toString(), kcalDifferencePercentTV.getText().toString());
+        System.out.println("selectedDateStr: "+selectedDateStr+", selectedDateLong: "+selectedDateLong);
+
+        mDbHelper.saveToDB(selectedDateStr, selectedDateLong, mEatenKcal.getText().toString(), mSpentKcal.getText().toString(), mWeight.getText().toString(),
+                mKDay.getText().toString(), mKcalDifferenceTV.getText().toString(), mKcalDifferencePercentTV.getText().toString());
 
         // Close keyboard
-        InputMethodManager imm = (InputMethodManager)saveButton.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mSaveButton.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
-            imm.hideSoftInputFromWindow(saveButton.getWindowToken(), 0);
+            imm.hideSoftInputFromWindow(mSaveButton.getWindowToken(), 0);
         }
+
+        if (getActivity() != null)
+            Toast.makeText(getActivity(), R.string.saved, Toast.LENGTH_SHORT).show();
     }
 
-    private void getSelectedDayData() {
-        KcalData kd = dbHelper.getSelectedDayData(mCalendar.getTimeInMillis());
+    private void setSelectedDayData() {
+        KcalData kd = mDbHelper.getSelectedDayData(mCalendar.getTimeInMillis());
 
-        if (kd != null) {
-            mSpentKcal.setText(kd.getSpentKcal());
-            mEatenKcal.setText(kd.getEatenKcal());
-            mWeight.setText(kd.getWeight());
-            mKDay.setText(kd.getKDay());
-        } else {
-            mSpentKcal.setText("");
-            mEatenKcal.setText("");
-            mWeight.setText("");
-            mKDay.setText("");
-        }
+        mSpentKcal.setText(kd.getSpentKcal());
+        mEatenKcal.setText(kd.getEatenKcal());
+        mWeight.setText(kd.getWeight());
+        mKDay.setText(kd.getKDay());
+
+        mChartHelper.updateChartData(lineChart, null, null);
+        lineChart.invalidate();
     }
 }

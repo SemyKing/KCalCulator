@@ -20,7 +20,6 @@ public interface IModel<E, K> {
     }
 
 
-
     void deleteAll();
 
     void save(E e);
